@@ -1,0 +1,53 @@
+To get this working, have to:
+
+- prevent wine from calling XGrabPointer when the game is fullscreen. to do
+  this, had to comment out (or otherwise avoid) all calls in the wine sources
+  and recompile.
+  - the wine source that actually starts the game was made with pkgbuild from
+    https://github.com/Tk-Glitch/PKGBUILDS/blob/master/wine-tkg-git/README.md
+  - so start the build, let it extract stuff, pause it, edit, continue
+  - in mouse.c:grab_clipping_window, a return TRUE at the beginning of the
+    function to skip.
+  - in window.c:X11DRV_SetCapture I just commented out the XGrabPointer call
+  - dunno which was relevant.
+
+- place our window over starcraft
+  - hack openbox to put Above windows over Fullscreen. this 
+    - in stacking.h, swap the two corresponding values in the enum
+    - could possibly add another option value to the layer option and
+      support it in config.c.
+  - btw, a dead-end: use overrideredirect
+    - redirectoverride windows can't get get focus by being clicked on
+    - in Tk, there's a hack that does this:
+      http://core.tcl.tk/tk/artifact/7892c68f49012d2d71222ae0e312a1e7dc69a801?txt=1&ln=51-64
+      - so build the package, delete that code, and rebuild with makepkg -e
+    - but apparently this behavior isn't just limited to Tk...
+
+- wine for good performance
+  - start with base tga config
+  - enable FS_bypass_compositor (i.e. "protonified" i think)
+  - enable dxvk
+
+- allow Alt+dragging on the minimap
+  - Had to get rid of mouse bindings Alt + left click, press, and drag in the
+    openbox rc.xml. Changed to windows key.
+
+TODAY:
+- reorganize project directory into blaze+git
+- refactor stuff into like a class or something
+- display error status instead of just Loading...
+- have 3 sizes
+- display proto-based build orders
+
+TODO:
+- nice-to-have
+  - pop notes window upwards so it doesn't cover the minimap.
+  - auto un-decorate? this is just an openbox setting maybe.
+  - "hide until gameover" button? Or just a pop-in to make it even smaller?
+  - refactor into a class, get rid of globals, whatnot.
+  - add (and upstream?) an openbox feature to layer above fullscreen.
+  - try to XGrabPointer ourselves preemptively so we dont' ahve to hack wine?
+    - or add a user patches into the custom wine tree at least
+    - or change some params in the XGrabPointer call so that other windows
+      still get events?
+    - or put a fullscreen transparent overlay over the whole screen?
