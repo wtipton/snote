@@ -19,10 +19,10 @@ class View:
 
     # https://stackoverflow.com/questions/28419763/expand-text-widget-to-fill-the-entire-parent-frame-in-tkinter
     self.window.grid_columnconfigure(0, weight=1)
-    self.window.grid_rowconfigure(1, weight=1)
+    self.window.grid_rowconfigure(0, weight=1)
 
     self.lbl = tk.Label(self.window, text="Loading...")
-    self.lbl.grid(column=0, row=0, sticky=tk.E+tk.W)
+    self.lbl.grid(column=0, row=1, sticky=tk.E+tk.W)
     self.lbl.bind("<Button-1>", lbl_left_click_handler)
     self.lbl.bind("<Button-3>", lbl_right_click_handler)
 
@@ -30,22 +30,22 @@ class View:
     self.pixel = tk.PhotoImage(width=1, height=1)
     self.view_toggle_button = tk.Button(self.window, image=self.pixel, height=16, width=16,
       command = view_toggle_handler)
-    self.view_toggle_button.grid(column=1, row=0)
+    self.view_toggle_button.grid(column=1, row=1)
 
     self.notes_scroll = tk.Scrollbar(self.window)
     self.notes_text = tk.Text(self.window, height=4, width=50)
     self.notes_scroll.config(command=self.notes_text.yview)
     self.notes_text.config(yscrollcommand=self.notes_scroll.set)
-    self.notes_text.grid(column=0,row=1, sticky="ewns")
-    self.notes_scroll.grid(column=1,row=1, sticky="ns")
+    self.notes_text.grid(column=0,row=0, sticky="ewns")
+    self.notes_scroll.grid(column=1,row=0, sticky="ns")
     self.notes_text.bind("<KeyRelease>", notes_updated_handler)
 
     self.build_scroll = tk.Scrollbar(self.window)
     self.build_text = tk.Text(self.window, height=4, width=50)
     self.build_scroll.config(command=self.build_text.yview)
     self.build_text.config(yscrollcommand=self.notes_scroll.set)
-    self.build_text.grid(column=0,row=1, sticky="ewns")
-    self.build_scroll.grid(column=1,row=1, sticky="ns")
+    self.build_text.grid(column=0,row=0, sticky="ewns")
+    self.build_scroll.grid(column=1,row=0, sticky="ns")
 
   def SetViewFormat(self, format):
     for item in self.window.grid_slaves():
@@ -70,7 +70,9 @@ class View:
       raise ValueError("unknown ViewFormat")
     for item in elements:
       item.grid()
-    self.window.geometry(str(width)+"x"+str(height)+"+5+700")
+    left = 5
+    top = 718 - height
+    self.window.geometry('{}x{}+{}+{}'.format(width, height, left, top))
 
   def Run(self):
     self.window.mainloop()
