@@ -58,10 +58,10 @@ class Controller:
         self.view_format = view_format
 
     # Set label text
-    if self.error_text is not None:
-      self.view.SetLabelText(self.error_text)
-    elif self.view_format == ViewFormat.TAB:
+    if self.view_format == ViewFormat.TAB:
       self.view.SetLabelText('')
+    elif self.error_text is not None:
+      self.view.SetLabelText(self.error_text)
     elif self.view_format == ViewFormat.BUILD_VIEW:
       self.view.SetLabelText(self.build.name)
     else:

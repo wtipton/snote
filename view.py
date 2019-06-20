@@ -21,11 +21,6 @@ class View:
     self.window.grid_columnconfigure(0, weight=1)
     self.window.grid_rowconfigure(1, weight=1)
 
-    self.tab_lbl = tk.Label(self.window)
-    self.tab_lbl.grid(column=0, row=0, columnspan=2, sticky=tk.E+tk.W)
-    self.tab_lbl.bind("<Button-1>", lbl_left_click_handler)
-    self.tab_lbl.bind("<Button-3>", lbl_right_click_handler)
-
     self.lbl = tk.Label(self.window, text="Loading...")
     self.lbl.grid(column=0, row=0, sticky=tk.E+tk.W)
     self.lbl.bind("<Button-1>", lbl_left_click_handler)
@@ -56,7 +51,7 @@ class View:
     for item in self.window.grid_slaves():
       item.grid_remove()
     if format == ViewFormat.TAB:
-      elements = [self.tab_lbl]
+      elements = [self.lbl]
       height = 18
       width = 18
     elif format == ViewFormat.LABEL_ONLY:
