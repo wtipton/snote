@@ -1,7 +1,9 @@
 import tkinter as tk
 
+from constants import ViewFormat
+
 class View:
-  def __init__(self, lbl_click_handler, notes_updated_handler):
+  def __init__(self, lbl_left_click_handler, lbl_right_click_handler, notes_updated_handler):
     #root = tk.Tk()
     #window = tk.Toplevel()
     self.window = tk.Tk()
@@ -19,8 +21,9 @@ class View:
     self.window.grid_rowconfigure(1, weight=1)
 
     self.lbl = tk.Label(self.window, text="Loading...")
-    self.lbl.grid(column=0, row=0, sticky=tk.E+tk.W)
-    self.lbl.bind("<Button-1>", lbl_click_handler)
+    self.lbl.grid(column=0, row=0, columnspan=2, sticky=tk.E+tk.W)
+    self.lbl.bind("<Button-1>", lbl_left_click_handler)
+    self.lbl.bind("<Button-3>", lbl_right_click_handler)
 
     self.S = tk.Scrollbar(self.window)
     self.T = tk.Text(self.window, height=4, width=50)
@@ -30,12 +33,16 @@ class View:
     self.S.grid(column=1,row=1, sticky="ns")
     self.T.bind("<KeyRelease>", notes_updated_handler)
 
-  def ResizeWindow(self, show_text_area):
-    width=300
-    if show_text_area:
-      height = 300
-    else:
+  def SetViewFormat(self, format):
+    if format == ViewFormat.TAB:
       height = 18
+      width = 18
+    elif format == ViewFormat.LABEL_ONLY:
+      height = 18
+      width = 300
+    else:
+      height = 300
+      width = 300
     self.window.geometry(str(width)+"x"+str(height)+"+5+700")
 
   def Run(self):

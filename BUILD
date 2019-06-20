@@ -5,4 +5,6 @@ py_binary(
   srcs = [
     "main.py",
   ],
+  deps = [
+  ]
 )

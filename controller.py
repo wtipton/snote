@@ -2,16 +2,16 @@ import json
 import requests
 
 import config
+from constants import ViewFormat
 from view import View
 from villain import Villain
-
 
 class Controller:
   def __init__(self):
     self.cfg = config.Config()
-    self.view = View(self.LblClickHandler, self.NotesUpdatedHandler)
-    self.toggle = False
-    self.view.ResizeWindow(False)
+    self.view = View(self.LblLeftClickHandler, self.LblRightClickHandler, self.NotesUpdatedHandler)
+    self.view_format = ViewFormat.LABEL_ONLY
+    self.view.SetViewFormat(self.view_format)
     self.villain = Villain('bob', self.cfg.data_dir)
     self.view.AddTask(self.PollAndUpdate, 1000)
 
@@ -31,17 +31,31 @@ class Controller:
           self.view.SetNotesText(self.villain.GetNotes())
           break
       else:
-        print('couldnt identify villain in api output')
+        self.view.SetLabelText('No villain found.')
     except Exception as e:
-      print ('couldnt open game api: ', e)
+      self.view.SetLabelText("Can't connect to API.")
+      print (e)
 
   def Run(self):
     self.view.Run()
 
-  def LblClickHandler(self, e):
-    self.toggle = not self.toggle
-    self.view.ResizeWindow(self.toggle)
+  # Make us smaller.
+  def LblLeftClickHandler(self, e):
+    if self.view_format == ViewFormat.TAB:
+      pass
+    elif self.view_format == ViewFormat.LABEL_ONLY:
+      self.view_format = ViewFormat.TAB
+    else:
+      self.view_format = ViewFormat.LABEL_ONLY
+    self.view.SetViewFormat(self.view_format)
+
+  # Make us bigger.
+  def LblRightClickHandler(self, e):
+    if self.view_format == ViewFormat.TAB:
+      self.view_format = ViewFormat.LABEL_ONLY
+    elif self.view_format == ViewFormat.LABEL_ONLY:
+      self.view_format = ViewFormat.NOTES_VIEW
+    self.view.SetViewFormat(self.view_format)
 
   def NotesUpdatedHandler(self, e):
-    print(self.view.GetVillainNotes())
     self.villain.SaveNotes(self.view.GetVillainNotes())
