@@ -35,6 +35,7 @@ class Controller:
         elif name != self.cfg.hero:
           self.villain = Villain(name, self.cfg.data_dir)
           self.build = Build(player['race'], self.cfg.data_dir)
+          self.view.SetNotesText(self.villain.GetNotes())
           break
       else:
         self.error_text = 'No villain found.'
@@ -70,9 +71,7 @@ class Controller:
       self.view.SetLabelText(self.villain.name)
 
     # Other stuff
-    if self.view_format == ViewFormat.NOTES_VIEW:
-      self.view.SetNotesText(self.villain.GetNotes())
-    elif self.view_format == ViewFormat.BUILD_VIEW:
+    if self.view_format == ViewFormat.BUILD_VIEW:
       self.view.SetBuildText(
         past=self.build.GetBuildText(before=self.game_time),
         future=self.build.GetBuildText(earliest=self.game_time))
