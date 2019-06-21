@@ -17,6 +17,7 @@ class Controller:
     self.villain = None
     self.build = None
     self.error_text = None
+    self.game_time = 0.0
     self.view.AddTask(self.PollAndUpdate, 1000)
 
   # client api:
@@ -26,6 +27,7 @@ class Controller:
     try:
       response = requests.get("http://localhost:6119/game")
       game_info = json.loads(response.text)
+      self.game_time = game_info['displayTime']
       for player in game_info['players']:
         name = player['name']
         if self.villain is not None and name == self.villain.name:
@@ -63,7 +65,7 @@ class Controller:
     elif self.error_text is not None:
       self.view.SetLabelText(self.error_text)
     elif self.view_format == ViewFormat.BUILD_VIEW:
-      self.view.SetLabelText(self.build.name)
+      self.view.SetLabelText('{}: {}'.format(self.build.race, self.build.name))
     else:
       self.view.SetLabelText(self.villain.name)
 
@@ -71,7 +73,9 @@ class Controller:
     if self.view_format == ViewFormat.NOTES_VIEW:
       self.view.SetNotesText(self.villain.GetNotes())
     elif self.view_format == ViewFormat.BUILD_VIEW:
-      self.view.SetBuildText(self.build.GetBuildText())
+      self.view.SetBuildText(
+        past=self.build.GetBuildText(before=self.game_time),
+        future=self.build.GetBuildText(earliest=self.game_time))
     self.view.SetViewFormat(self.view_format)
 
 

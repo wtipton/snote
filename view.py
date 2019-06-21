@@ -46,6 +46,7 @@ class View:
     self.build_text.config(yscrollcommand=self.notes_scroll.set)
     self.build_text.grid(column=0,row=0, sticky="ewns")
     self.build_scroll.grid(column=1,row=0, sticky="ns")
+    self.build_text.tag_configure("bold", font="bold")
 
   def SetViewFormat(self, format):
     for item in self.window.grid_slaves():
@@ -88,11 +89,16 @@ class View:
     self.notes_text.insert(tk.END, text)
     self.notes_text.configure(state=tk.NORMAL)
 
-  def SetBuildText(self, text):
-    self.build_text.delete(1.0, tk.END)
-    self.build_text.insert(tk.END, text)
+  def SetBuildText(self, past='', future=''):
     self.build_text.configure(state=tk.NORMAL)
+    self.build_text.delete(1.0, tk.END)
+    self.build_text.insert(tk.END, past)
+    if past:
+      self.build_text.insert(tk.END, '\n')
+    self.build_text.insert(tk.END, future, 'bold')
+    self.build_text.configure(state=tk.DISABLED)
 
+  # Repeatedly call func every delay_ms.
   def AddTask(self, func, delay_ms):
     def f():
       func()
