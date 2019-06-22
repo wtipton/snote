@@ -90,6 +90,9 @@ class View:
     self.notes_text.configure(state=tk.NORMAL)
 
   def SetBuildText(self, past='', future=''):
+    # include at most 4 lines of past
+    past = '\n'.join(past.split('\n')[-4:])
+    # set text
     self.build_text.configure(state=tk.NORMAL)
     self.build_text.delete(1.0, tk.END)
     self.build_text.insert(tk.END, past)
