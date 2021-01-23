@@ -23,6 +23,9 @@ To get this working, have to:
       - so build the package, delete that code, and rebuild with makepkg -e
     - but apparently this behavior isn't just limited to Tk...
 
+- re: white screen in bnet app:
+  https://forums.lutris.net/t/issues-starting-battle-net-on-pop-os-after-update/7228/26
+
 - wine for good performance
   - start with base tga config
   - enable FS_bypass_compositor (i.e. "protonified" i think)

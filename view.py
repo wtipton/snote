@@ -13,7 +13,7 @@ class View:
     #window.overrideredirect(True)
     #window.wm_attributes('-type','splash')
     #window.lift()
-    self.window.wm_attributes("-topmost", True)
+    #self.window.wm_attributes("-topmost", True)
     #window.wm_attributes("-disabled", True)
     #window.wm_attributes("-transparentcolor", "white")
 
